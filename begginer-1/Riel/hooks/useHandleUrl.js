@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-
+import { useEffect } from 'react';
 export const UseHandleUrl = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -11,6 +11,10 @@ export const UseHandleUrl = () => {
     searchParams.set(key, value);
     setSearchParams(searchParams);
   };
+  useEffect(() => {
+    setUrlValue('page', 1);
+    setUrlValue('perPage', 20);
+  }, []);
 
   return { getUrlValue, setUrlValue };
 };

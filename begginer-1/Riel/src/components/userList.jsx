@@ -1,8 +1,13 @@
+import { UseHandleUrl } from '../../hooks/useHandleUrl';
 import { birthDate, lastLoginDate, leftIdPad, phoneNumber } from '../utils/userData';
 import { styled } from 'styled-components';
 
 // sortField, sortOrder ,
-function UserList({ userData, setUrlValue, perPage, currentPage }) {
+function UserList({ userData }) {
+  const { getUrlValue } = UseHandleUrl();
+
+  const currentPage = +getUrlValue('page');
+  const perPage = +getUrlValue('perPage');
   const indexOfLastUser = perPage * currentPage;
   const indexOfFirstUser = indexOfLastUser - perPage;
   const currentUserList = userData.slice(indexOfFirstUser, indexOfLastUser);

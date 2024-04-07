@@ -1,47 +1,10 @@
 import styled from 'styled-components';
 
-const PageBtn = (userData, setUrlValue, perPage, currentPage) => {
-  const pageBtnList = [];
-  let firstPageBtn;
-  let lastPageBtn;
+import { usePageNationBtn } from '../../hooks/usePageNationBtn';
 
-  const totalPages = Math.ceil(userData.length / perPage);
-  if (currentPage >= totalPages - 1) {
-    firstPageBtn = Math.max(1, totalPages - 4);
-  } else {
-    firstPageBtn = Math.max(1, currentPage - 2);
-  }
-
-  if (currentPage <= 2) {
-    lastPageBtn = Math.min(5, totalPages);
-  } else {
-    lastPageBtn = Math.min(currentPage + 2, totalPages);
-  }
-
-  //   for (let i = firstPageBtn; i <= lastPageBtn; i++) {
-  //     pageBtnList.push(i);
-  //   }
-  for (let i = firstPageBtn; i <= lastPageBtn; i++) {
-    pageBtnList.push(
-      <S.btnList key={i} onClick={changePage(i)} isSelected={i === currentPage}>
-        {i}
-      </S.btnList>
-    );
-  }
-  // const BtnArray = Array.from({length:5},(elemen,idx)=>{
-
-  // })
-  const changePage = (page) => () => {
-    setUrlValue('page', page);
-  };
-
-  function isPrevBtnDisabled(currentPage) {
-    return currentPage <= 1;
-  }
-
-  function isNextBtnDisabled(currentPage) {
-    return currentPage >= totalPages;
-  }
+const PageBtn = ({ userData }) => {
+  const { changePage, isPrevBtnDisabled, isNextBtnDisabled, BtnListFunction, currentPage, totalPages } =
+    usePageNationBtn(userData);
 
   return (
     <S.pageButtonWrapper>
@@ -53,8 +16,8 @@ const PageBtn = (userData, setUrlValue, perPage, currentPage) => {
         Prev
       </button>
 
-      {pageBtnList.map((page, index) => (
-        <S.btnList key={index} onClick={changePage(page)} isSelected={page === currentPage}>
+      {BtnListFunction().map((page, index) => (
+        <S.btnList key={index} onClick={changePage(page)} $isSelected={page === currentPage}>
           {page}
         </S.btnList>
       ))}
@@ -75,7 +38,7 @@ const pageButtonWrapper = styled.div`
   justify-content: center;
 `;
 const btnList = styled.button`
-  color: ${(props) => (props.isSelected ? 'blue' : 'black')};
+  color: ${({ $isSelected }) => ($isSelected ? 'blue' : 'black')};
   border-style: none;
 `;
 
