@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
-export const UseHandleUrl = () => {
+export const useHandleUrl = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const getUrlValue = (key) => {

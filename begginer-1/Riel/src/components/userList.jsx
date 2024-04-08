@@ -1,10 +1,10 @@
-import { UseHandleUrl } from '../../hooks/useHandleUrl';
+import { useHandleUrl } from '../../hooks/useHandleUrl';
 import { birthDate, lastLoginDate, leftIdPad, phoneNumber } from '../utils/userData';
 import { styled } from 'styled-components';
 
 // sortField, sortOrder ,
 function UserList({ userData }) {
-  const { getUrlValue } = UseHandleUrl();
+  const { getUrlValue } = useHandleUrl();
 
   const currentPage = +getUrlValue('page');
   const perPage = +getUrlValue('perPage');

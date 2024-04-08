@@ -1,7 +1,7 @@
-import { UseHandleUrl } from './useHandleUrl';
+import { useHandleUrl } from './useHandleUrl';
 
 export const usePageNationBtn = (userData) => {
-  const { setUrlValue, getUrlValue } = UseHandleUrl();
+  const { setUrlValue, getUrlValue } = useHandleUrl();
   const currentPage = +getUrlValue('page');
   const perPage = +getUrlValue('perPage');
   const totalPages = Math.ceil(userData.length / perPage);
