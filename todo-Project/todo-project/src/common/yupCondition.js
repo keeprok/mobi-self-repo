@@ -24,3 +24,13 @@ export const AboutYup = yup
     return lengthWithoutSpaces === value.length;
   }) // 띄어쓰기를 제외한 길이 체크
   .matches(/^[a-zA-Z0-9가-힣.,?!]*$/, '특수문자는 빼주세요(,.?!제외)');
+export const TitleYup = yup
+  .string()
+  .min(2, '2 자 이상은적어주세요')
+  .max(11, '10자 이내로 작성해주세요')
+  .required('제목을 입력해주세요');
+export const ContentYup = yup
+  .string()
+  .min(2, '2 자 이상은적어주세요')
+  .max(101, '100자 이내로 작성해주세요')
+  .required('내용을 작성해주세요');
