@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormInput from '../../common/formInput';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
 const AddTodoPage = () => {
   const navigate = useNavigate();
   const schema = yup.object().shape({
@@ -17,14 +18,18 @@ const AddTodoPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: 'onSubmit', resolver: yupResolver(schema) });
-  const onSubmitAddTodo = async ({ title, content }) => {
-    try {
-      const response = await postTodo({ title: title, content: content });
-      console.log('잘보내짐', response.data);
+
+  const { mutateAsync: addTodo } = useMutation(postTodo, {
+    onSuccess: (data) => {
+      console.log('할 일 추가 성공', data);
       navigate('/Todo');
-    } catch (error) {
-      console.log('실패', error.response.data);
-    }
+    },
+    onError: (error) => {
+      console.error('할 일 추가 실패', error.response?.data);
+    },
+  });
+  const onSubmitAddTodo = async (data) => {
+    await addTodo(data);
   };
 
   return (

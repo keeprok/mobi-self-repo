@@ -5,6 +5,7 @@ import { EmailYup, PassWordYup } from '../../common/yupCondition';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { postSignUp } from '../../libs/axios/user';
+import { useMutation } from 'react-query';
 const SignUpPage = () => {
   const navigate = useNavigate();
   const schema = yup.object().shape({
@@ -17,13 +18,22 @@ const SignUpPage = () => {
     formState: { errors, isValid },
   } = useForm({ mode: 'onChange', resolver: yupResolver(schema) });
 
+  const { mutateAsync: signUp } = useMutation(postSignUp, {
+    onSuccess: (data) => {
+      console.log('축하합니다. 회원가입에 성공하셨습니다', data);
+      navigate('/sign-in');
+    },
+    onError: (err) => {
+      console.error('이미 존재하는 이메일입니다', err.response?.data);
+    },
+  });
+
   const onSubmitFnc = async (data) => {
     try {
-      const response = await postSignUp({ email: data.email, pw: data.passWord });
-      console.log('축하합니다. 회원가입에 성공하셨습니다', response.data);
-      navigate('/sign-in');
+      const userData = await signUp({ email: data.email, pw: data.passWord });
+      console.log('가입 성공', userData);
     } catch (error) {
-      console.log('이미 존재하는 이메일입니다', error.response.data);
+      console.error('가입 실패', error.response?.data);
     }
   };
 

@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import FormInput from '../../common/formInput';
 import { postSignIn } from '../../libs/axios/user';
 import { setSessionToken } from '../../libs/auth/storage-manager';
+import { useMutation } from 'react-query';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -20,17 +21,24 @@ const SignInPage = () => {
     formState: { errors, isValid },
   } = useForm({ mode: 'onChange', resolver: yupResolver(schema) });
 
+  const { mutateAsync: signIn } = useMutation(postSignIn, {
+    onSuccess: (data) => {
+      console.log('축하합니다. 로그인에 성공하셨습니다', data);
+      setSessionToken(data.data.token);
+      navigate('/todo');
+    },
+    onError: (err) => {
+      console.error('로그인에 실패하셨습니다', err.response.data);
+    },
+  });
   const onSubmitFnc = async (data) => {
     try {
-      const response = await postSignIn({ email: data.email, pw: data.passWord });
-      console.log('로그인 성공', response.data);
-      setSessionToken(response.data.token);
-      navigate('/todo');
+      const userData = await signIn({ email: data.email, pw: data.passWord });
+      console.log('로그인 성공', userData);
     } catch (error) {
-      console.log('가입되지 않은 회원입니다 ', error.response.data);
+      console.error('로그인 실패', error.response?.data);
     }
   };
-
   const navigateSignUp = () => {
     navigate('/sign-up');
   };
@@ -41,8 +49,6 @@ const SignInPage = () => {
       <form onSubmit={handleSubmit(onSubmitFnc)}>
         <div>
           <FormInput placeholder="email" register={register} name="email" errors={errors} />
-          {/* <input placeholder="email" {...register('email')} />
-            {errors.email && <p>{errors.email.message}</p>} */}
           <FormInput placeholder="passWord" register={register} name="passWord" errors={errors} />
           <button type="submit" disabled={!isValid}>
             로그인
